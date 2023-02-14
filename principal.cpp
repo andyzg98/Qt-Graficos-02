@@ -1,10 +1,6 @@
 #include "principal.h"
 #include "ui_principal.h"
 
-#include <QPainter>
-#include <QFileDialog>
-#include <QMessageBox>
-
 Principal::Principal(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::Principal)
@@ -28,8 +24,12 @@ void Principal::dibujar()
 
     QPainter painter(&lienzo);
 
-    int x = 0;
-    int y = 0;
+    int x = 30;
+    int graf1 = 4*nota1;
+    int graf2 = 4*nota2;
+    int graf3 = 4*nota3;
+    int promedio = 4*((nota1 + nota2 + nota3) / 3);
+
 
     // Crear un pincel para los bordes
     QPen pincel;
@@ -41,12 +41,14 @@ void Principal::dibujar()
     painter.setPen(pincel);
 
     // Dibujar primera barra
-    painter.drawRect(x+50, y+50,100,400);
+    painter.drawRect(x+50,(400- graf1+50),100,graf1);
 
     // Crear un objeto color para el relleno
     QColor colorRelleno(190,120,162);
     // Crear otro objeto color para el borde
     QColor colorBorde(78,3,48);
+    //Crear color para la linea
+    QColor colorLinea(0,0,0);
 
     // Cambiar el color del pincel
     pincel.setColor(colorBorde);
@@ -58,7 +60,7 @@ void Principal::dibujar()
     painter.setBrush(colorRelleno);
 
     // Dibujar segunda barra
-    painter.drawRect(x+170, y+200, 100, 250);
+    painter.drawRect(x+170,(400-graf2+50), 100, graf2);
 
     // Creando los colores de la tercera barra
     QColor cRellenoBarra3(253, 253, 115);
@@ -70,7 +72,16 @@ void Principal::dibujar()
     painter.setBrush(cRellenoBarra3);
 
     // Dibujar tercera barra
-    painter.drawRect(x+290,y+350,100,100);
+    painter.drawRect(x+290,(400-graf3+50),100,graf3);
+    //Cambiar color del pincel
+    pincel.setColor(colorLinea);
+
+    // Volver a establecer el pincel al "pintor"
+    painter.setPen(pincel);
+
+    //Dibujar linea
+    painter.drawLine(x+50, (400-promedio+50), x+390, (400-promedio+50));
+
 }
 
 
@@ -86,7 +97,33 @@ void Principal::on_actionGuardar_triggered()
     }
 }
 
-void Principal::on_pushButton_clicked(bool checked)
+
+
+void Principal::on_spinBox_valueChanged(int arg1)
 {
+    nota1 = arg1;
+    dibujar();
+    ui->outCuadro->setPixmap(lienzo);
 
 }
+
+
+void Principal::on_spinBox_2_valueChanged(int arg1)
+{
+
+    nota2 = arg1;
+    dibujar();
+    ui->outCuadro->setPixmap(lienzo);
+
+}
+
+
+void Principal::on_spinBox_3_valueChanged(int arg1)
+{
+
+    nota3 = arg1;
+    dibujar();
+    ui->outCuadro->setPixmap(lienzo);
+
+}
+
